@@ -80,13 +80,13 @@ var gameMaster = (() => {
       console.log(coordinates);
       return coordinates;
     }
-
+    
     //meat of the game
     if (!isGameRunning) {
       //disable buttons
       return 0;
     }
-
+    
     if (playerChance === 1) {
       //shuffle between two players
       if (playTurn(player1, getInput(e))) {
@@ -106,7 +106,7 @@ var gameMaster = (() => {
       }
       winCond(player2.getPlayerToken(), player2.getName());
     }
-    checkDraw();
+    if(isGameRunning !== false) checkDraw();
     boardMaster.printBoard();
   }
 
