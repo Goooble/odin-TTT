@@ -17,6 +17,9 @@ var boardMaster = (() => {
       return 0;
     }
   }
+  function getBoard(){
+    return gameBoard;
+  }
 
   function printBoard() {
     gameBoard
@@ -44,7 +47,7 @@ var boardMaster = (() => {
     return { getToken, updateToken };
   }
 
-  return { printBoard, updateCell };
+  return { getBoard, printBoard, updateCell };
 })();
 
 var gameMaster = (() => {
@@ -54,35 +57,47 @@ var gameMaster = (() => {
   var rounds = 9;
 
   function playGame() {
-    for(let i = 0; i < rounds; i++){
+      for(let i = 0; i < rounds; i++){
       if(playerChance === 1){
         if(playTurn(player1) === 0){
           rounds++;
           continue;
         }
+        
         boardMaster.printBoard();
+        if(player1.winCond() === 1) break;
         playerChance = 2;
       }else{
         if(playTurn(player2) === 0){
           rounds++;
           continue;
         }
+        
         boardMaster.printBoard();
+        if(player2.winCond() === 1) break;
         playerChance = 1;
       }
     }
+
+    
 
     function playTurn(player) {
       return boardMaster.updateCell(player.getInput(), player.getPlayerToken());
     }
   }
 
+  function gameWin(){
+      console.log("")
+  }
+
+  
   return { playGame };
 })();
 
 var display = (() => {})();
 
 function player(name, token) {
+
   var playerToken = token;
   var playerName = name;
   function getPlayerToken() {
@@ -97,5 +112,30 @@ function player(name, token) {
     return [row - 1, column - 1];
   }
 
-  return { getPlayerToken, getInput };
+  function winCond(){
+    var rowTokens = 0;
+    var colTokens = 0;
+    var board = boardMaster.getBoard();
+    //check for row win
+    board.forEach((row) => {
+      row.forEach((square) => {
+        if(square.getToken() === playerToken){
+          rowTokens++;
+        }
+
+      })
+      if(rowTokens === 3){
+        console.log(`${playerName} wins the game!`);
+        return 1;
+      }else{
+        rowTokens=0;
+      }
+
+      
+      
+    })
+    return 0;
+  }
+
+  return { getPlayerToken, getInput, winCond };
 }
