@@ -9,12 +9,12 @@ var boardMaster = (() => {
   }
 
   function updateCell([row, column], playerToken) {
-
     if (gameBoard[row][column].getToken() === "#") {
       gameBoard[row][column].updateToken(playerToken);
-    }else{
+      return 1;
+    } else {
       console.log("already placed, choose an empty tile");
-
+      return 0;
     }
   }
 
@@ -28,7 +28,7 @@ var boardMaster = (() => {
       .forEach((cell) => {
         console.log(cell);
       });
-      console.log("-------------------");
+    console.log("-------------------");
   }
 
   function cell() {
@@ -37,52 +37,65 @@ var boardMaster = (() => {
     function getToken() {
       return token;
     }
-  
+
     function updateToken(playerToken) {
       token = playerToken;
     }
     return { getToken, updateToken };
   }
 
-  return {printBoard, updateCell};
+  return { printBoard, updateCell };
 })();
 
 var gameMaster = (() => {
   var player1 = player("Gobi", "X");
   var player2 = player("Broccoli", "O");
-  var lastPlayed;
-  
+  var playerChance = 1;
+  var rounds = 9;
+
   function playGame() {
-    for(let i = 0; i < 9; i++){
-      boardMaster.updateCell(player1.getInput(), player1.getPlayerToken());
-      boardMaster.printBoard();
-      boardMaster.updateCell(player2.getInput(), player2.getPlayerToken());
-      boardMaster.printBoard();
+    for(let i = 0; i < rounds; i++){
+      if(playerChance === 1){
+        if(playTurn(player1) === 0){
+          rounds++;
+          continue;
+        }
+        boardMaster.printBoard();
+        playerChance = 2;
+      }else{
+        if(playTurn(player2) === 0){
+          rounds++;
+          continue;
+        }
+        boardMaster.printBoard();
+        playerChance = 1;
+      }
+    }
+
+    function playTurn(player) {
+      return boardMaster.updateCell(player.getInput(), player.getPlayerToken());
     }
   }
 
-  return {playGame};
+  return { playGame };
 })();
 
+var display = (() => {})();
 
-var display = (() => {
-
-})();
-
-
-function player(name, token){
+function player(name, token) {
   var playerToken = token;
   var playerName = name;
-  function getPlayerToken(){
+  function getPlayerToken() {
     return playerToken;
   }
 
-  function getInput(){
-   var [row, column] = prompt(`enter the cordinates ${playerName}`, "22").split("");
-   return [row-1, column-1]
+  function getInput() {
+    var [row, column] = prompt(
+      `enter the cordinates ${playerName}`,
+      "22"
+    ).split("");
+    return [row - 1, column - 1];
   }
 
-  return{getPlayerToken, getInput};
+  return { getPlayerToken, getInput };
 }
-
-
