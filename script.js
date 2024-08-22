@@ -8,9 +8,13 @@ var boardMaster = (() => {
     }
   }
 
-  function updateCell(row, column, playerToken) {
-    if (gameBoard[row][column].getToken() === 0) {
+  function updateCell([row, column], playerToken) {
+
+    if (gameBoard[row][column].getToken() === "#") {
       gameBoard[row][column].updateToken(playerToken);
+    }else{
+      console.log("already placed, choose an empty tile");
+
     }
   }
 
@@ -24,22 +28,61 @@ var boardMaster = (() => {
       .forEach((cell) => {
         console.log(cell);
       });
+      console.log("-------------------");
   }
 
-  return {gameBoard, printBoard, updateCell};
+  function cell() {
+    //cell is a space on the board
+    var token = "#";
+    function getToken() {
+      return token;
+    }
+  
+    function updateToken(playerToken) {
+      token = playerToken;
+    }
+    return { getToken, updateToken };
+  }
+
+  return {printBoard, updateCell};
+})();
+
+var gameMaster = (() => {
+  var player1 = player("Gobi", "X");
+  var player2 = player("Broccoli", "O");
+  var lastPlayed;
+  
+  function playGame() {
+    for(let i = 0; i < 9; i++){
+      boardMaster.updateCell(player1.getInput(), player1.getPlayerToken());
+      boardMaster.printBoard();
+      boardMaster.updateCell(player2.getInput(), player2.getPlayerToken());
+      boardMaster.printBoard();
+    }
+  }
+
+  return {playGame};
 })();
 
 
+var display = (() => {
 
-function cell() {
-  //cell is a space on the board
-  var token = 0;
-  function getToken() {
-    return token;
+})();
+
+
+function player(name, token){
+  var playerToken = token;
+  var playerName = name;
+  function getPlayerToken(){
+    return playerToken;
   }
 
-  function updateToken(playerToken) {
-    token = playerToken;
+  function getInput(){
+   var [row, column] = prompt(`enter the cordinates ${playerName}`, "22").split("");
+   return [row-1, column-1]
   }
-  return { getToken, updateToken };
+
+  return{getPlayerToken, getInput};
 }
+
+
