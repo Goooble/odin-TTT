@@ -1,7 +1,7 @@
 body{
     background-color: #90E0EF ;
     display: grid;
-    grid-template-rows: min-content 1fr;
+    grid-template-rows: min-content min-content 1fr;
     height: 100vh;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -13,12 +13,63 @@ h1{
     color: #03045E;
 }
 
+.controls-cont{
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.controls-cont button, .controls-cont label{
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.controls-cont button{
+    height: min-content;
+    align-self:flex-end;
+    padding: 5px 10px;
+    background-color: #03045E;
+    color: #E9D985;
+    border:2px solid #E9D985;
+    border-radius: 10px;
+}
+.controls-cont button:hover{
+    text-shadow: 0 0 2px #E9D985;
+}
+.controls-cont button:active{
+    box-shadow: 0 0 2px 2px #E9D985;
+}
+.controls-cont>div{
+    display: flex;
+    flex-direction: column;
+}
+.controls-cont input{
+    border: none;
+    background-color: #03045E;
+    color: #E9D985;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+}
+
+.controls-cont div:first-child::before{
+    content: "X";
+    color: #03045E;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.controls-cont div:last-child::before{
+    content: "O";
+    color: #03045E;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
 main{
     display: flex;
     flex-wrap: wrap;
     width: 60vh;
     height: 60vh;
-    background-color: aquamarine;
     margin: auto auto;
     outline: 4px solid #90E0EF;
 
@@ -39,5 +90,5 @@ main>button{
 }
 
 main>button:hover{
-    text-shadow: 0px 0px 10px #E9D985;
+    background-color: #766F72;
 }

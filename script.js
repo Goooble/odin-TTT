@@ -4,6 +4,10 @@ var gameMaster = (() => {
   var playerChance = 1;
   var isGameRunning = true;
 
+  function resetGame(){
+    boardMaster.createBoard();
+  }
+
   function playGame(e) {
     //functions
     function winCond(playerToken, playerName) {
@@ -77,7 +81,6 @@ var gameMaster = (() => {
     function getInput(e) {
       //fetches coordinates from screen
       var coordinates = [+e.target.dataset.row, +e.target.dataset.col];
-      console.log(coordinates);
       return coordinates;
     }
     
@@ -106,11 +109,11 @@ var gameMaster = (() => {
       }
       winCond(player2.getPlayerToken(), player2.getName());
     }
-    if(isGameRunning !== false) checkDraw();
+    if(isGameRunning !== false) checkDraw();//in a if() becuase it used to print draw even after winning without the if
     boardMaster.printBoard();
   }
 
-  return { playGame, isGameRunning };
+  return { playGame, isGameRunning, resetGame };
 })();
 
 var display = (() => {
