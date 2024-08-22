@@ -66,7 +66,7 @@ var gameMaster = (() => {
         }
 
         boardMaster.printBoard();
-        if (player1.winCond() === 1) break;
+        if (gameMaster.winCond(player1.getPlayerToken(), player1.getName()) === 1) break;
         playerChance = 2;
       } else {
         if (playTurn(player2) === 0) {
@@ -75,7 +75,7 @@ var gameMaster = (() => {
         }
 
         boardMaster.printBoard();
-        if (player2.winCond() === 1) break;
+        if (gameMaster.winCond(player2.getPlayerToken(),player1.getName()) === 1) break;
         playerChance = 1;
       }
     }
@@ -84,35 +84,9 @@ var gameMaster = (() => {
       return boardMaster.updateCell(player.getInput(), player.getPlayerToken());
     }
   }
-
-  function gameWin() {
-    console.log("");
-  }
-
-  return { playGame };
-})();
-
-var display = (() => {})();
-
-function player(name, token) {
-  var playerToken = token;
-  var playerName = name;
-  function getPlayerToken() {
-    return playerToken;
-  }
-
-  function getInput() {
-    var [row, column] = prompt(
-      `enter the cordinates ${playerName}`,
-      "22"
-    ).split("");
-    return [row - 1, column - 1];
-  }
-
-  function winCond() {
+  function winCond(playerToken, playerName) {
     var rowTokens = 0;
     var colTokens = 0;
-    var diaTokens = 0;
     var board = boardMaster.getBoard();
     //check for row win
     board.forEach((row) => {
@@ -153,5 +127,29 @@ function player(name, token) {
     return 0;
   }
 
-  return { getPlayerToken, getInput, winCond };
+
+
+  return { playGame, winCond };
+})();
+
+function player(name, token) {
+  var playerToken = token;
+  var playerName = name;
+  function getPlayerToken() {
+    return playerToken;
+  }
+
+  function getInput() {
+    var [row, column] = prompt(
+      `enter the cordinates ${playerName}`,
+      "22"
+    ).split("");
+    return [row - 1, column - 1];
+  }
+
+  function getName(){
+    return playerName;
+  }
+
+  return { getPlayerToken, getInput, getName };
 }
