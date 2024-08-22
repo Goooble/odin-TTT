@@ -33,12 +33,11 @@ main>button{
     justify-content: center;
     align-items: center;
     border: none;
-    color: white;
+    color: #E9D985;
     outline:4px solid #E9D985;
     background-color: #03045E;
 }
 
 main>button:hover{
-    text-shadow: 0px 0px 10px white;
-    
+    text-shadow: 0px 0px 10px #E9D985;
 }
