@@ -17,7 +17,7 @@ var boardMaster = (() => {
       return 0;
     }
   }
-  function getBoard(){
+  function getBoard() {
     return gameBoard;
   }
 
@@ -57,47 +57,44 @@ var gameMaster = (() => {
   var rounds = 9;
 
   function playGame() {
-      for(let i = 0; i < rounds; i++){
-      if(playerChance === 1){
-        if(playTurn(player1) === 0){
+    boardMaster.printBoard();
+    for (let i = 0; i < rounds; i++) {
+      if (playerChance === 1) {
+        if (playTurn(player1) === 0) {
           rounds++;
           continue;
         }
-        
+
         boardMaster.printBoard();
-        if(player1.winCond() === 1) break;
+        if (player1.winCond() === 1) break;
         playerChance = 2;
-      }else{
-        if(playTurn(player2) === 0){
+      } else {
+        if (playTurn(player2) === 0) {
           rounds++;
           continue;
         }
-        
+
         boardMaster.printBoard();
-        if(player2.winCond() === 1) break;
+        if (player2.winCond() === 1) break;
         playerChance = 1;
       }
     }
-
-    
 
     function playTurn(player) {
       return boardMaster.updateCell(player.getInput(), player.getPlayerToken());
     }
   }
 
-  function gameWin(){
-      console.log("")
+  function gameWin() {
+    console.log("");
   }
 
-  
   return { playGame };
 })();
 
 var display = (() => {})();
 
 function player(name, token) {
-
   var playerToken = token;
   var playerName = name;
   function getPlayerToken() {
@@ -112,28 +109,47 @@ function player(name, token) {
     return [row - 1, column - 1];
   }
 
-  function winCond(){
+  function winCond() {
     var rowTokens = 0;
     var colTokens = 0;
+    var diaTokens = 0;
     var board = boardMaster.getBoard();
     //check for row win
     board.forEach((row) => {
       row.forEach((square) => {
-        if(square.getToken() === playerToken){
+        if (square.getToken() === playerToken) {
           rowTokens++;
         }
-
-      })
-      if(rowTokens === 3){
+      });
+      if (rowTokens === 3) {
+        console.log(`${playerName} wins the game!`);
+        return 1;
+      } else {
+        rowTokens = 0;
+      }
+    });
+    //check for column win
+    for (let i = 0; i < 3; i++) {
+      board.forEach((row) => {
+        if(row[i].getToken() === playerToken)
+        {
+          colTokens++;
+        }
+      });
+      if(colTokens === 3){
         console.log(`${playerName} wins the game!`);
         return 1;
       }else{
-        rowTokens=0;
+        colTokens = 0;
       }
+    }
 
-      
-      
-    })
+    //check for dia win
+    if(board[0][0].getToken() === playerToken && board[1][1].getToken() === playerToken && board[2][2].getToken() === playerToken || board[2][0].getToken() === playerToken && board[1][1].getToken() === playerToken && board[0][2].getToken() === playerToken)
+    {
+      console.log(`${playerName} wins the game!`);
+      return 1
+    }
     return 0;
   }
 
