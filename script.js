@@ -1,55 +1,3 @@
-var boardMaster = (() => {
-  //initial board creation
-  var gameBoard = [];
-  for (let i = 0; i < 3; i++) {
-    gameBoard[i] = [];
-    for (let j = 0; j < 3; j++) {
-      gameBoard[i].push(cell()); //default state 0
-    }
-  }
-
-  function updateCell([row, column], playerToken) {
-    if (gameBoard[row][column].getToken() === "#") {
-      gameBoard[row][column].updateToken(playerToken);
-      return 1;
-    } else {
-      console.log("already placed, choose an empty tile");
-      return 0;
-    }
-  }
-  function getBoard() {
-    return gameBoard;
-  }
-
-  function printBoard() {
-    gameBoard
-      .map((row) => {
-        return row.map((square) => {
-          return square.getToken();
-        });
-      })
-      .forEach((cell) => {
-        console.log(cell);
-      });
-    console.log("-------------------");
-  }
-
-  function cell() {
-    //cell is a space on the board
-    var token = "#";
-    function getToken() {
-      return token;
-    }
-
-    function updateToken(playerToken) {
-      token = playerToken;
-    }
-    return { getToken, updateToken };
-  }
-
-  return { getBoard, printBoard, updateCell };
-})();
-
 var gameMaster = (() => {
   var player1 = player("Gobi", "X");
   var player2 = player("Broccoli", "O");
@@ -57,6 +5,7 @@ var gameMaster = (() => {
   var rounds = 9;
 
   function playGame() {
+    boardMaster.createBoard();
     boardMaster.printBoard();
     for (let i = 0; i < rounds; i++) {
       if (playerChance === 1) {
@@ -78,11 +27,25 @@ var gameMaster = (() => {
         if (gameMaster.winCond(player2.getPlayerToken(),player1.getName()) === 1) break;
         playerChance = 1;
       }
+      
     }
+    gameMaster.checkDraw();
+    boardMaster.createBoard();
 
     function playTurn(player) {
       return boardMaster.updateCell(player.getInput(), player.getPlayerToken());
     }
+  }
+  function checkDraw(){
+    boardMaster.getBoard().forEach((row) => {
+      row.forEach((square) => {
+        if (square.getToken() === '#') {
+          return 0;
+        }
+        
+      });
+    });
+    console.log("its a draw!");
   }
   function winCond(playerToken, playerName) {
     var rowTokens = 0;
@@ -132,6 +95,78 @@ var gameMaster = (() => {
   return { playGame, winCond };
 })();
 
+var display = (() => {
+  const main = document.querySelector("main");
+  function displayBoard(){
+    var boardArray = [[],[],[]]
+    boardArray.forEach((row) => {
+      for(let i = 0; i <3; i++)
+      {row.push(document.createElement("button"));
+        main.appendChild(row[i]);
+        row[i].textContent = "O";
+      }
+    })
+  }   
+  return {displayBoard};
+})();
+
+display.displayBoard();
+
+var boardMaster = (() => {
+  //initial board creation
+  var gameBoard = [];
+  function createBoard(){
+    for (let i = 0; i < 3; i++) {
+      gameBoard[i] = [];
+      for (let j = 0; j < 3; j++) {
+        gameBoard[i].push(cell()); //default state #
+      }
+    }
+  }
+  
+
+  function updateCell([row, column], playerToken) {
+    if (gameBoard[row][column].getToken() === "#") {
+      gameBoard[row][column].updateToken(playerToken);
+      return 1;
+    } else {
+      console.log("already placed, choose an empty tile");
+      return 0;
+    }
+  }
+  function getBoard() {
+    return gameBoard;
+  }
+
+  function printBoard() {
+    gameBoard
+      .map((row) => {
+        return row.map((square) => {
+          return square.getToken();
+        });
+      })
+      .forEach((cell) => {
+        console.log(cell);
+      });
+    console.log("-------------------");
+  }
+
+  function cell() {
+    //cell is a space on the board
+    var token = "#";
+    function getToken() {
+      return token;
+    }
+
+    function updateToken(playerToken) {
+      token = playerToken;
+    }
+    return { getToken, updateToken };
+  }
+
+  return { getBoard, printBoard, updateCell, createBoard };
+})();
+
 function player(name, token) {
   var playerToken = token;
   var playerName = name;
@@ -153,3 +188,5 @@ function player(name, token) {
 
   return { getPlayerToken, getInput, getName };
 }
+
+
