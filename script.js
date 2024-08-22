@@ -5,42 +5,6 @@ var gameMaster = (() => {
   var isGameRunning = true;
 
   function playGame(e) {
-    //   boardMaster.createBoard();
-    //   boardMaster.printBoard();
-    //   for (let i = 0; i < rounds; i++) {
-    //     if (playerChance === 1) {
-    //       if (playTurn(player1) === 0) {
-    //         rounds++;
-    //         continue;
-    //       }
-    //       boardMaster.printBoard();
-    //       if (gameMaster.winCond(player1.getPlayerToken(), player1.getName()) === 1) break;
-    //       playerChance = 2;
-    //     } else {
-    //       if (playTurn(player2) === 0) {
-    //         rounds++;
-    //         continue;
-    //       }
-    //       boardMaster.printBoard();
-    //       if (gameMaster.winCond(player2.getPlayerToken(),player1.getName()) === 1) break;
-    //       playerChance = 1;
-    //     }
-    //   }
-    //   gameMaster.checkDraw();
-    //   boardMaster.createBoard();
-    //
-    // }
-    // function checkDraw(){
-    //   boardMaster.getBoard().forEach((row) => {
-    //     row.forEach((square) => {
-    //       if (square.getToken() === '#') {
-    //         return 0;
-    //       }
-    //     });
-    //   });
-    //   console.log("its a draw!");
-
-
     //functions
     function winCond(playerToken, playerName) {
       var rowTokens = 0;
@@ -55,6 +19,7 @@ var gameMaster = (() => {
         });
         if (rowTokens === 3) {
           isGameRunning = false;
+          console.log("row");
           return 0;
         } else {
           rowTokens = 0;
@@ -69,12 +34,13 @@ var gameMaster = (() => {
         });
         if (colTokens === 3) {
           isGameRunning = false;
+          console.log("column");
           return 0;
         } else {
           colTokens = 0;
         }
       }
-  
+
       //check for dia win
       if (
         (board[0][0].getToken() === playerToken &&
@@ -85,57 +51,66 @@ var gameMaster = (() => {
           board[0][2].getToken() === playerToken)
       ) {
         isGameRunning = false;
+        console.log("dia");
         return 0;
       }
       return 0;
     }
-    function checkDraw(){
-      var emptyCell = []
+    function checkDraw() {
+      var emptyCellCounter = 0;
       boardMaster.getBoard().forEach((row) => {
-      emptyCell = row.filter((square) => {
-          if (square.getToken() === '#') {
-            return true;
+        row.forEach((square) => {
+          if (square.getToken() === "#") {
+            emptyCellCounter++;
           }
         });
       });
-      if(!emptyCell.length)
-      {console.log(emptyCell.length)
-      isGameRunning = false;}
+      if (emptyCellCounter === 0) {
+        isGameRunning = false;
+        console.log("draw");
+      }
     }
-    function playTurn(player, coordinates) {//updates board
-      return boardMaster.updateCell(
-        coordinates,
-        player.getPlayerToken()
-      );
+    function playTurn(player, coordinates) {
+      //updates board
+      return boardMaster.updateCell(coordinates, player.getPlayerToken());
     }
-    function getInput(e) {//fetches coordinates from screen
+    function getInput(e) {
+      //fetches coordinates from screen
       var coordinates = [+e.target.dataset.row, +e.target.dataset.col];
-      console.log(coordinates)
+      console.log(coordinates);
       return coordinates;
     }
 
     //meat of the game
-    if(!isGameRunning){//disable buttons
-      console.log("calle")
+    if (!isGameRunning) {
+      //disable buttons
       return 0;
     }
 
-    if (playerChance === 1) {//shuffle between two players
-      playTurn(player1, getInput(e))?playerChance=2:playerChance=1;
+    if (playerChance === 1) {
+      //shuffle between two players
+      if (playTurn(player1, getInput(e))) {
+        playerChance = 2;
+        display.displayToken(player1.getPlayerToken(), e);
+      } else {
+        playerChance = 1;
+      }
       winCond(player1.getPlayerToken(), player1.getName());
-    }else{
-      playTurn(player2, getInput(e))?playerChance=1:playerChance=2;
+    } 
+    else {
+      if (playTurn(player2, getInput(e))) {
+        playerChance = 1;
+        display.displayToken(player2.getPlayerToken(), e);
+      } else {
+        playerChance = 2;
+      }
       winCond(player2.getPlayerToken(), player2.getName());
     }
     checkDraw();
     boardMaster.printBoard();
   }
 
-  
-
-  
-
-  return { playGame};
+  return { playGame, isGameRunning };
 })();
 
 var display = (() => {
@@ -153,10 +128,12 @@ var display = (() => {
     });
   }
 
-  return { displayBoard };
+  function displayToken(token, cell) {
+    cell.target.textContent = token;
+  }
+
+  return { displayBoard, displayToken };
 })();
-
-
 
 var boardMaster = (() => {
   //initial board creation
