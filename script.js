@@ -4,6 +4,11 @@ var gameMaster = (() => {
   var playerChance = 1;
   var isGameRunning = true;
 
+  function stopGame(){
+    isGameRunning = false;
+    display.stopHover();
+  }
+
   function resetGame(){
     boardMaster.createBoard();
   }
@@ -15,20 +20,22 @@ var gameMaster = (() => {
       var colTokens = 0;
       var board = boardMaster.getBoard();
       //check for row win
-      board.forEach((row) => {
-        row.forEach((square) => {
+      for(let i = 0; i<3; i++){
+        board[i].forEach((square) => {
           if (square.getToken() === playerToken) {
+            
             rowTokens++;
+            console.log(rowTokens);
           }
         });
         if (rowTokens === 3) {
-          isGameRunning = false;
+          stopGame();
           console.log("row");
           return 0;
         } else {
           rowTokens = 0;
         }
-      });
+      }
       //check for column win
       for (let i = 0; i < 3; i++) {
         board.forEach((row) => {
@@ -37,7 +44,7 @@ var gameMaster = (() => {
           }
         });
         if (colTokens === 3) {
-          isGameRunning = false;
+          stopGame();
           console.log("column");
           return 0;
         } else {
@@ -54,7 +61,7 @@ var gameMaster = (() => {
           board[1][1].getToken() === playerToken &&
           board[0][2].getToken() === playerToken)
       ) {
-        isGameRunning = false;
+        stopGame();
         console.log("dia");
         return 0;
       }
@@ -70,7 +77,7 @@ var gameMaster = (() => {
         });
       });
       if (emptyCellCounter === 0) {
-        isGameRunning = false;
+        stopGame();
         console.log("draw");
       }
     }
@@ -124,6 +131,7 @@ var display = (() => {
       for (let i = 0; i < 3; i++) {
         row.push(document.createElement("button"));
         main.appendChild(row[i]);
+        row[i].setAttribute("class", "hover")
         row[i].setAttribute("data-row", `${index}`);
         row[i].setAttribute("data-col", `${i}`);
         row[i].addEventListener("click", gameMaster.playGame);
@@ -135,7 +143,15 @@ var display = (() => {
     cell.target.textContent = token;
   }
 
-  return { displayBoard, displayToken };
+  function stopHover(){
+    const gridButtons = document.querySelectorAll("main>button");
+    gridButtons.forEach((item) => 
+    {
+      console.log(item);
+      item.classList.toggle("hover");
+    })
+  }
+  return { displayBoard, displayToken, stopHover };
 })();
 
 var boardMaster = (() => {

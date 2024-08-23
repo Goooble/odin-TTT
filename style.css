@@ -89,6 +89,6 @@ main>button{
     background-color: #03045E;
 }
 
-main>button:hover{
+main>.hover:hover{
     background-color: #766F72;
 }
