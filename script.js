@@ -11,6 +11,8 @@ var gameMaster = (() => {
 
   function resetGame(){
     boardMaster.createBoard();
+    display.resetGrid();
+    isGameRunning = true;
   }
 
   function playGame(e) {
@@ -131,27 +133,34 @@ var display = (() => {
       for (let i = 0; i < 3; i++) {
         row.push(document.createElement("button"));
         main.appendChild(row[i]);
-        row[i].setAttribute("class", "hover")
+        row[i].setAttribute("class", "hover buttons")
         row[i].setAttribute("data-row", `${index}`);
         row[i].setAttribute("data-col", `${i}`);
         row[i].addEventListener("click", gameMaster.playGame);
       }
     });
   }
+  const resetBut = document.querySelector(".reset-but");
+  resetBut.addEventListener("click", gameMaster.resetGame);
 
   function displayToken(token, cell) {
     cell.target.textContent = token;
   }
 
   function stopHover(){
-    const gridButtons = document.querySelectorAll("main>button");
+    
     gridButtons.forEach((item) => 
     {
-      console.log(item);
       item.classList.toggle("hover");
     })
   }
-  return { displayBoard, displayToken, stopHover };
+
+  function resetGrid(){
+    gridButtons.forEach((item) => {
+      item.textContent = "";
+    })
+  }
+  return { displayBoard, displayToken, stopHover, resetGrid };
 })();
 
 var boardMaster = (() => {
@@ -224,3 +233,4 @@ function player(name, token) {
 display.displayBoard();
 boardMaster.createBoard();
 boardMaster.printBoard();
+const gridButtons = document.querySelectorAll(".buttons");
