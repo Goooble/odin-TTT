@@ -92,3 +92,13 @@ main>button{
 main>.hover:hover{
     background-color: #766F72;
 }
+
+dialog {
+    background-color: #E9D985;
+    margin: auto;
+    top: 80%;
+    border-radius: 20px;
+    font-size: 2rem;
+    border: none;
+    color: #03045E;
+}
